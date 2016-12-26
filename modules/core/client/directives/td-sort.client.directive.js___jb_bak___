@@ -1,0 +1,56 @@
+'use strict';
+
+angular.module('core').directive('tdSort', ['$compile', '$state', '$timeout', function ($compile, $state, $timeout) {
+    return {
+        restrict: 'A', // allow as an element; the default is only an attribute
+        scope: {
+            'ngModel': '=',
+            'ngDirection': '=',
+            'ngSortBy': '@',
+            'ngSortByFunct': '='
+        },
+        link: function (scope, element, attrs) {
+            var arrowD = '<span class="fa fa-chevron-up"></span>';//'<i class="fa fa-arrow-down"></i>';
+            var arrowU = '<span class="fa fa-chevron-down"></span>';//'<i class="fa fa-arrow-up"></i>';
+            var noArrow = '<span class="fa fa-bars"></span>';//'<i class="fa fa-minus"></i>';
+            var destroyWatch = false;
+
+            if (_.isFunction(scope.ngSortByFunct)) {
+                scope.ngSortBy = scope.ngSortByFunct;
+            }
+
+            var el = document.createElement('div');
+            el.className = 'pull-right';
+            el.innerHTML = noArrow;
+            element.append(el);
+            scope.ngDirection = false;
+
+            element.on('click', function (value) {
+                $timeout(function () {
+                    scope.ngModel = scope.ngSortBy;
+                    watchAfter();
+
+                    if (el.innerHTML === arrowD) {
+                        el.innerHTML = arrowU;
+                        scope.ngDirection = true;
+                    } else {
+                        el.innerHTML = arrowD;
+                        scope.ngDirection = false;
+                    }
+                });
+            });
+
+            function watchAfter () {
+                if (!destroyWatch) {
+                    destroyWatch = scope.$watch('ngModel', function (newVal, oldVal) {
+                        if (newVal !== oldVal) {
+                            el.innerHTML = noArrow;
+                            destroyWatch();
+                            destroyWatch = false;
+                        }
+                    });
+                }
+            }
+        }
+    };
+}]);
