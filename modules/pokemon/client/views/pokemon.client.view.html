@@ -1,0 +1,11 @@
+<section class="pokemon" >
+    <div class="row wrapper border-bottom white-bg page-heading"  ui-view="headerView">
+        <h2>
+            <i data-ng-if="header.faIcon !== undefined" class="fa {{header.faIcon}}"></i> {{ header.label }} <small class="text-muted prepend-bottom-5">{{header.desc}}</small>
+        </h2>
+
+        <bread-crumbs/>
+    </div>
+
+    <div ui-view=""></div>
+</section>

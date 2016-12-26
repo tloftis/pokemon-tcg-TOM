@@ -1,0 +1,103 @@
+<div class="wrapper wrapper-content row animated fadeInRight" data-ng-init="init()">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row">
+                <button class="btn btn-primary pull-right"
+                        style="margin-right: 5px;" data-ng-click="createPlayer()">Create Player</button>
+
+                <button class="btn btn-success pull-left"
+                        style="margin-right: 5px;" data-ng-click="downloadXml()">Export Players.xml</button>
+            </div>
+
+            <div class="row" style="margin-top: 10px;">
+                <div class="clear m-b-sm">
+                    <div class="pull-left col-md-4">
+                        <label>Show </label>
+
+                        <label>
+                            <select single required class="form-control input-sm" data-ng-model="tableSort.itemsPerPage"
+                                    ng-options="value for value in tableRowCount track by value"
+                                    ng-change="refreshTable(tableSort, players)"></select>
+                        </label>
+                        
+                        <label>entries</label>
+                    </div>
+
+                    <div class="col-md-4 pull-right">
+                        <input class="form-control" type="text" ng-model="tableSort.search" placeholder="Search" ng-change="refreshTable(tableSort, players)" />
+                    </div>
+                </div>
+
+                <ul uib-pagination total-items="tableSort.pagedItems.length" data-ng-model="tableSort.currentPage" rotate="false"
+                    boundary-links="true"  ng-change="refreshTable(tableSort, players)" max-size="tableSort.maxPageNumbers"
+                    items-per-page="tableSort.itemsPerPage" class="pagination-sm pull-right"></ul>
+
+                <table class="table table-condensed table-bordered table-hover text-center">
+                    <tr style="width:inherit;">
+                        <td td-sort ng-sort-by="firstName" ng-model="tableSort.sortBy" ng-direction="tableSort.reversOrd">
+                            <strong>First Name</strong>
+                        </td>
+
+                        <td td-sort ng-sort-by="lastName" ng-model="tableSort.sortBy" ng-direction="tableSort.reversOrd">
+                            <strong>Last Name</strong>
+                        </td>
+
+                        <td td-sort ng-sort-by="pokeId" ng-model="tableSort.sortBy" ng-direction="tableSort.reversOrd">
+                            <strong>Pokemon Id</strong>
+                        </td>
+
+                        <td td-sort ng-sort-by="dob" ng-model="tableSort.sortBy" ng-direction="tableSort.reversOrd">
+                            <strong>DoB</strong>
+                        </td>
+
+                        <td td-sort ng-sort-by="email" ng-model="tableSort.sortBy" ng-direction="tableSort.reversOrd">
+                            <strong>Email</strong>
+                        </td>
+
+                        <td>
+                            <strong></strong>
+                        </td>
+                    </tr>
+
+                    <tbody ng-show="($index >= tableSort.begin) && ($index < tableSort.end)"
+                           data-ng-repeat="player in tableSort.pagedItems | orderBy:tableSort.sortBy:tableSort.reversOrd">
+                        <tr ng-class="{'bg-danger': log.level==='error', 'bg-warning': log.level==='warn'}">
+                            <td>{{player.firstName}}</td>
+                            <td>{{player.lastName}}</td>
+                            <td>{{player.pokeId}}</td>
+                            <td>{{player.dob | date:'MM/dd/yyyy'}}</td>
+                            <td>{{player.email || 'N/A'}}</td>
+
+                            <td class="text-center">
+                                <div class="btn-group" data-ng-class='{open: openConfig}'>
+                                    <a class="dropdown-toggle" data-toggle="dropdown" data-ng-click='openConfig =! openConfig'><i class="fa fa-sliders fa-2x"></i></a>
+
+                                    <ul class="dropdown-menu left">
+                                        <li data-ng-click="updatePlayer(player);" class="text-center text-success p-xxs hover">
+                                            <i class="fa fa-arrow-circle-o-left"></i> Edit Player
+                                        </li>
+
+                                        <li role="separator" class="divider"></li>
+
+                                        <li data-ng-click="removePlayer(player);" class="text-center text-danger p-xxs hover">
+                                            <i class="fa fa-trash-o"></i> Delete
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <tr ng-hide="players.length">
+                        <td colspan="3">No App Logs Are Currently Available to Display</td>
+                    </tr>
+                </table>
+                <div class="row">
+                    <div class="col-xs-12">
+                        Showing {{tableSort.begin + 1}} to {{(tableSort.end < tableSort.total) ? tableSort.end : tableSort.total }} of {{tableSort.total}} entries
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

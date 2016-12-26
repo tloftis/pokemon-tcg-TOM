@@ -1,9 +1,0 @@
-{
-    "name": "RFID-RC522",
-    "type": "string",
-    "packages": [
-        "rc522"
-    ],
-    "config":{},
-    "description": "This is an interface for the RFID-RC522 reader"
-}
